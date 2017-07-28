@@ -16,12 +16,24 @@ const server = express()
 // Create the WebSockets server
 const wss = new SocketServer({ server });
 
+const newNotification = (user) => {
+  console.log(user);
+  const newID = uuidv4()
+  const msg = {
+    id: newID,
+    type: "incomingNotification",
+    content: user.content
+  }
+  console.log(msg);
+  return msg;
+}
+
 const newMessage = (message) => {
   const newID = uuidv4();
   const msg = {
       id: newID,
-      type: "message",
-      username: message.username,
+      type: "incomingMessage",
+      username: message.namename,
       content: message.content
     }
     return msg;
@@ -32,12 +44,20 @@ const newMessage = (message) => {
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
   console.log('Client connected');
+
+
   ws.on('message', function incoming(message) {
+    console.log(message);
     const msg = JSON.parse(message);
-    console.log('Got a new message');
-    console.log(msg);
-    console.log('User', msg.username, 'said', msg.content);
-    const sendMessage = JSON.stringify(newMessage(msg));
+    let sendMessage;
+    if (msg.type === 'postMessage') {
+      console.log('Got a new message');
+      console.log(msg);
+      console.log('User', msg.username, 'said', msg.content);
+      sendMessage = JSON.stringify(newMessage(msg));
+    } else if (msg.type === 'postNotification') {
+      sendMessage = JSON.stringify(newNotification(msg));
+    }
 
   // Broadcast message
     wss.clients.forEach(function each(client) {
