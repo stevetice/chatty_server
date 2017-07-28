@@ -45,6 +45,22 @@ const newMessage = (message) => {
 wss.on('connection', (ws) => {
   console.log('Client connected');
 
+  function activeConnection() {
+    let connectionCount = {
+      type: "incomingCount",
+      users: wss.clients.size
+    }
+    let count;
+    wss.clients.forEach(function each(client) {
+      // if (client.readyState === ws.OPEN) {
+        count = JSON.stringify(connectionCount)
+        client.send(count);
+        console.log(count);
+      // }
+    })
+  }
+
+  activeConnection();
 
   ws.on('message', function incoming(message) {
     console.log(message);
@@ -63,11 +79,15 @@ wss.on('connection', (ws) => {
     wss.clients.forEach(function each(client) {
       if (client.readyState === ws.OPEN) {
         client.send(sendMessage);
-      console.log('Sent a message: ', sendMessage);
+        console.log('Sent a message: ', sendMessage);
       }
     });
   });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected'));
+  ws.on('close', () => {
+    activeConnection();
+    console.log('Client disconnected');
+
+  })
 });
