@@ -9,7 +9,7 @@ const PORT = 3001;
 
 // Create a new express servergit add
 const server = express()
-   // Make the express server serve static assets (html, javascript, css) from the /public folder
+  // Make the express server serve static assets (html, javascript, css) from the /public folder
   .use(express.static('public'))
   .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on ${ PORT }`));
 
@@ -18,25 +18,26 @@ const wss = new SocketServer({ server });
 
 const newNotification = (user) => {
   console.log(user);
-  const newID = uuidv4()
+  const newID = uuidv4();
   const msg = {
     id: newID,
+    username: user.username,
     type: "incomingNotification",
     content: user.content
-  }
+  };
   console.log(msg);
   return msg;
-}
+};
 
 const newMessage = (message) => {
   const newID = uuidv4();
   const msg = {
-      id: newID,
-      type: "incomingMessage",
-      username: message.namename,
-      content: message.content
-    }
-    return msg;
+    id: newID,
+    type: "incomingMessage",
+    username: message.username,
+    content: message.content
+  };
+  return msg;
 };
 
 // Set up a callback that will run when a client connects to the server
@@ -49,15 +50,12 @@ wss.on('connection', (ws) => {
     let connectionCount = {
       type: "incomingCount",
       users: wss.clients.size
-    }
+    };
     let count;
     wss.clients.forEach(function each(client) {
-      // if (client.readyState === ws.OPEN) {
-        count = JSON.stringify(connectionCount)
-        client.send(count);
-        console.log(count);
-      // }
-    })
+      count = JSON.stringify(connectionCount);
+      client.send(count);
+    });
   }
 
   activeConnection();
@@ -75,7 +73,7 @@ wss.on('connection', (ws) => {
       sendMessage = JSON.stringify(newNotification(msg));
     }
 
-  // Broadcast message
+    // Broadcast message
     wss.clients.forEach(function each(client) {
       if (client.readyState === ws.OPEN) {
         client.send(sendMessage);
@@ -89,5 +87,5 @@ wss.on('connection', (ws) => {
     activeConnection();
     console.log('Client disconnected');
 
-  })
+  });
 });
