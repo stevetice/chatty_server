@@ -1,6 +1,6 @@
 # chatty-server
 Lighthouse Labs - Week 5 Project
-Chatty-server WebSockets server required for [chatty-app](https://github.com/stevetice/chatty-app) to run.
+chatty-server WebSockets server required for [chatty-app](https://github.com/stevetice/chatty-app) to run.
 
 
 ## Install
@@ -9,11 +9,11 @@ Chatty-server WebSockets server required for [chatty-app](https://github.com/ste
 
 ## Run
 `npm start`
-Chatty server uses port 3001.
+chatty-server uses port 3001.
 
 
 ## Notes
-Chatty-server is required for [chatty-app](https://github.com/stevetice/chatty-app) to run.
+chatty-server is required for [chatty-app](https://github.com/stevetice/chatty-app) to run.
 
 
 ## Dependencies
